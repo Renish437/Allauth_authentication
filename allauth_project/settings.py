@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-
+from .secrets import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-     
+    'django_extensions',
     # added
     'accounts',
     'allauth',
@@ -83,7 +83,7 @@ TEMPLATES = [
 AUTHENTICATION_BACKENDS = [
  
     # Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
+   # 'django.contrib.auth.backends.ModelBackend',
 
     # `allauth` specific authentication methods, such as login by email
    'allauth.account.auth_backends.AuthenticationBackend',
@@ -153,10 +153,53 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/' 
+# ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login'
 
+#Important
+
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+ACCOUNT_EMAIL_VERIFICATION = "mandatory" # Verified user is only allowed to login   "optional" (by default) "mandatory"(required makes)
+ACCOUNT_EMAIL_NOTIFICATIONS = True    # When "changed password" or "reset password done" then notification will be sent to particular user by default = False
+ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True # automatically logouts when password is changed
+ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_USERNAME_BLACKLIST =['admin','renish437','youtube']
+ACCOUNT_USERNAME_MIN_LENGTH = 3 # BY DEFAULT 1 MAKE IT 3
+
+# Rate Limter
+ACCOUNT_RATE_LIMITS = {
+    "login_failed": "5/5m",  # Max 5 failed logins per 5 minutes
+    "signup": "3/h",         # Max 3 signups per hour
+    "password_reset": "5/h", # Max 5 resets per hour
+}
+# OTP By Email
+ACCOUNT_LOGIN_BY_CODE_ENABLED = True    # "One Time Password"  enabled
+ACCOUNT_LOGIN_BY_CODE_MAX_ATTEMPTS = 4
+ACCOUNT_LOGIN_BY_CODE_TIMEOUT = 120       # 120 means 2 mins expiry 180 means 3 mins expiry so on....
+
+# User Can add upto 6 emails both should be like given below two
+# ACCOUNT_CHANGE_EMAIL = False 
+# ACCOUNT_MAX_EMAIL_ADDRESS = 6  
+
+ACCOUNT_CHANGE_EMAIL = True  # by default True
+ACCOUNT_CONFIRM_EMAIL_ON_GET = False  # by defualt is False if True automatically verifies the email
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS=1  # default is of 3 days
+ACCOUNT_LOGIN_ON_EMAILL_CONFIRMATION = False  # False by default if True then : as soon as email confirmed the user automatically login
+ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = True    # Here False doesnot allow even the email to be sent in "TempMails"
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+ACCOUNT_LOGIN_ON_PASSWORD_RESET=False   # default False (after reset successful redirect to authenticated page or dashboard)
+ACCOUNT_REAUTHENTICATION_TIMEOUT = 300  # Require reauthentication every 5 minutes (300 seconds)
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True  # BY DEFAULT TRUE
+
+
+# Branding for emails
+DEFAULT_FROM_EMAIL = "MYAUTHALL <no-reply@myauthall.com>"
+SERVER_EMAIL = "MYAUTHALL <no-reply@myauthall.com>"
+
+# Allauth specific subject prefix
+ACCOUNT_EMAIL_SUBJECT_PREFIX = "[MYAUTHALL]"
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = '437renish@gmail.com'
-EMAIL_HOST_PASSWORD = 'qlrcikoqtlyamodm'
+EMAIL_HOST_USER = EMAIL_HOST_USER or ""
+EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD or ""
