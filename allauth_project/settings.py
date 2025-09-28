@@ -39,15 +39,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     # added
+    'django.contrib.sites',
     'accounts',
     'allauth',
     'allauth.account',
     
     'allauth.socialaccount',
-    # 'allauth.socialaccount.providers.github',
-    # 'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.google',
 ]
-
+SITE_ID=1
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -60,7 +61,7 @@ MIDDLEWARE = [
       # Add the account middleware:
     "allauth.account.middleware.AccountMiddleware",
 ]
-SITE_ID=1
+
 
 ROOT_URLCONF = 'allauth_project.urls'
 
@@ -188,7 +189,7 @@ ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = True    # Here False doesnot allow even the ema
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 ACCOUNT_LOGIN_ON_PASSWORD_RESET=False   # default False (after reset successful redirect to authenticated page or dashboard)
 ACCOUNT_REAUTHENTICATION_TIMEOUT = 300  # Require reauthentication every 5 minutes (300 seconds)
-ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True  # BY DEFAULT TRUE
+
 
 
 # Branding for emails
@@ -203,3 +204,28 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = EMAIL_HOST_USER or ""
 EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD or ""
+
+
+
+
+SOCIALACCOUNT_PROVIDERS = {
+   'google':{
+       'SCOPE':[
+           'profile',
+           'email',
+           
+       ],
+       'AUTH_PARAMS':{
+           'access_type':"online",
+       },
+       'OAUTH_PKCE_ENABLED':True,
+   },
+   'github':{
+       'SCOPE':[
+           'user',
+           'repo',
+           'read:org'
+       ],
+       "VERIFIED_EMAIL":True
+   },
+}
