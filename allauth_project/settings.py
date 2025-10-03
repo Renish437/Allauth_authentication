@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-5&0dmd%xhavk#o3n9)*tr*ql@@a57#_)ozgfb6)*tj4l81vnty
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 
 # Application definition
@@ -186,7 +186,7 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = False  # by defualt is False if True automaticall
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS=1  # default is of 3 days
 ACCOUNT_LOGIN_ON_EMAILL_CONFIRMATION = False  # False by default if True then : as soon as email confirmed the user automatically login
 ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = True    # Here False doesnot allow even the email to be sent in "TempMails"
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "http"
 ACCOUNT_LOGIN_ON_PASSWORD_RESET=False   # default False (after reset successful redirect to authenticated page or dashboard)
 ACCOUNT_REAUTHENTICATION_TIMEOUT = 300  # Require reauthentication every 5 minutes (300 seconds)
 
@@ -205,6 +205,21 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = EMAIL_HOST_USER or ""
 EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD or ""
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {'class': 'logging.StreamHandler'},
+    },
+    'loggers': {
+        'allauth.account': {'handlers': ['console'], 'level': 'DEBUG', 'propagate': True},
+        'allauth.socialaccount': {'handlers': ['console'], 'level': 'DEBUG', 'propagate': True},
+        'django.request': {'handlers': ['console'], 'level': 'DEBUG', 'propagate': True},
+        'urllib3': {'handlers': ['console'], 'level': 'DEBUG'},
+    },
+}
+
+
 
 
 
@@ -220,12 +235,9 @@ SOCIALACCOUNT_PROVIDERS = {
        },
        'OAUTH_PKCE_ENABLED':True,
    },
-   'github':{
-       'SCOPE':[
-           'user',
-           'repo',
-           'read:org'
-       ],
-       "VERIFIED_EMAIL":True
+
+    'github': {
+       'SCOPE': ['user', 'repo', 'read:org'],
+       'VERIFIED_EMAIL': True,  # keep False for local testing
    },
 }
