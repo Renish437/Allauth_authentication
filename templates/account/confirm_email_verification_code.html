@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load allauth account %}
+
+{% block head_title %}
+    {% translate "Email Verification" %}
+{% endblock head_title %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div class="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
+        <!-- Title -->
+        <h1 class="text-2xl font-extrabold text-gray-800 text-center mb-6">
+            {% translate "Enter Email Verification Code" %}
+        </h1>
+
+        <!-- Recipient Info -->
+        <p class="text-center text-gray-600 mb-6">
+            {% translate "We have sent a verification code to your email:" %} 
+            <a href="mailto:{{ email }}" class="text-purple-600 font-semibold hover:underline">{{ email }}</a>
+        </p>
+
+        <!-- Form -->
+        <form method="post" action="{% url 'account_email_verification_sent' %}" class="space-y-5">
+            {% csrf_token %}
+            
+            <!-- Verification Code Input -->
+            <div>
+                <label for="verification_code" class="block mb-2 font-medium text-gray-700">
+                    {% translate "Verification Code" %}
+                </label>
+                <input type="text" name="verification_code" id="verification_code" 
+                       class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition"
+                       placeholder="{% translate 'Enter your code' %}" required>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" 
+                    class="w-full py-3 bg-purple-600 text-white rounded-xl font-bold text-lg hover:bg-purple-700 transition">
+                {% translate "Verify Email" %}
+            </button>
+        </form>
+
+        <!-- Change Email Option -->
+        <div class="mt-6 text-center">
+            <a href="{% url 'account_email' %}" 
+               class="text-gray-600 hover:text-purple-600 font-medium">
+               {% translate "Use a different email address" %}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

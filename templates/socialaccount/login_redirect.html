@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load i18n allauth %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% translate "Sign In" %} | {{ provider }}</title>
+    <meta http-equiv="refresh" content="0; URL='{{ redirect_to }}'" />
+</head>
+<body class="flex items-center justify-center h-screen bg-gray-50">
+    <p class="text-gray-700">
+        <a href="{{ redirect_to }}" class="text-blue-600 hover:underline">
+            {% translate "Continue" %}
+        </a>
+    </p>
+</body>
+</html>

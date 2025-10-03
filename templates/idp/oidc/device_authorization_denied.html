@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load i18n allauth %}
+
+{% block head_title %}
+    {% trans "Device Denied" %}
+{% endblock head_title %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 space-y-6 text-center">
+        
+        <!-- Title -->
+        <h1 class="text-2xl font-bold text-gray-800">
+            {% trans "Device Denied" %}
+        </h1>
+
+        <!-- Message -->
+        <p class="text-gray-600">
+            {% blocktranslate with client_name=client.name %}
+                Authorization for your {{ client_name }} device has been denied.
+            {% endblocktranslate %}
+        </p>
+
+        <!-- Error Icon -->
+        <div class="flex justify-center">
+            <svg class="w-16 h-16 text-red-600" fill="none" stroke="currentColor" stroke-width="2"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </div>
+
+        <!-- Back button -->
+        <div class="pt-4">
+            <a href="/" 
+               class="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-lg transition">
+                {% trans "Go Back" %}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

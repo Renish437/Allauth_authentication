@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load i18n allauth static %}
+
+{% block head_title %}
+    {% trans "Two-Factor Authentication" %}
+{% endblock head_title %}
+
+{% block content %}
+<div class="max-w-md mx-auto bg-white shadow-lg rounded-2xl p-8 space-y-6">
+
+    <!-- Title -->
+    <h1 class="text-2xl font-bold text-gray-800 text-center">{% trans "Two-Factor Authentication" %}</h1>
+
+    <!-- Instruction -->
+    <p class="text-gray-600 text-center">
+        {% blocktranslate %}Your account is protected by two-factor authentication. Please enter an authenticator code:{% endblocktranslate %}
+    </p>
+
+    <!-- Authenticator Code Form -->
+    {% url 'mfa_authenticate' as action_url %}
+    <form method="post" action="{{ action_url }}" class="space-y-4">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="flex justify-between items-center">
+            <button type="submit" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+                {% trans "Sign In" %}
+            </button>
+            {% if "webauthn" not in MFA_SUPPORTED_TYPES %}
+                <button type="submit" form="logout-from-stage" class="text-gray-500 hover:underline">
+                    {% trans "Cancel" %}
+                </button>
+            {% endif %}
+        </div>
+    </form>
+
+    <!-- WebAuthn alternative -->
+    {% if "webauthn" in MFA_SUPPORTED_TYPES %}
+        <hr class="my-4 border-gray-200">
+        <h2 class="text-lg font-semibold text-gray-700">{% trans "Alternative options" %}</h2>
+        <div class="flex flex-col gap-3 mt-2">
+            <button type="button" form="webauthn_form" id="mfa_webauthn_authenticate" class="px-4 py-2 border border-purple-600 text-purple-600 rounded-lg hover:bg-purple-50">
+                {% trans "Use a security key" %}
+            </button>
+            <button type="submit" form="logout-from-stage" class="px-4 py-2 border border-gray-400 text-gray-700 rounded-lg hover:bg-gray-100">
+                {% trans "Cancel" %}
+            </button>
+        </div>
+
+        <form id="webauthn_form" method="post" action="{{ action_url }}" class="hidden">
+            {% csrf_token %}
+            {{ webauthn_form.as_p }}
+        </form>
+
+        {{ js_data|json_script:"js_data" }}
+        {% include "mfa/webauthn/snippets/scripts.html" %}
+        <script data-allauth-onload="allauth.webauthn.forms.authenticateForm" type="application/json">
+        {
+            "ids": {
+                "authenticate": "mfa_webauthn_authenticate",
+                "credential": "{{ webauthn_form.credential.auto_id }}",
+                "data": "js_data"
+            }
+        }
+        </script>
+    {% endif %}
+
+    <!-- Logout hidden form -->
+    <form id="logout-from-stage" method="post" action="{% url 'account_logout' %}">
+        <input type="hidden" name="next" value="{% url 'account_login' %}">
+        {% csrf_token %}
+    </form>
+
+</div>
+{% endblock content %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load i18n allauth %}
+
+{% block head_title %}
+    {% trans "Device Authorized" %}
+{% endblock head_title %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 space-y-6 text-center">
+        
+        <!-- Title -->
+        <h1 class="text-2xl font-bold text-gray-800">
+            {% trans "Device Authorized" %}
+        </h1>
+
+        <!-- Message -->
+        <p class="text-gray-600">
+            {% blocktranslate with client_name=client.name %}
+                You successfully authorized your {{ client_name }} device.
+            {% endblocktranslate %}
+        </p>
+
+        <!-- Success Icon -->
+        <div class="flex justify-center">
+            <svg class="w-16 h-16 text-green-600" fill="none" stroke="currentColor" stroke-width="2"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        </div>
+
+        <!-- Back to Dashboard / Home -->
+        <div class="pt-4">
+            <a href="/" 
+               class="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg transition">
+                {% trans "Continue" %}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

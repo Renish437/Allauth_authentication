@@ -1,0 +1,63 @@
+<!-- Toast Container -->
+<div
+  class="fixed top-5 mx-auto md:w-[350px] max-w-4xl right-5 space-y-3 z-[9999]"
+>
+  {% if messages %} 
+  {% for message in messages %}
+  <div
+    x-data="{ show: true }"
+    x-show="show"
+    x-transition.duration.300ms
+    x-init="setTimeout(() => show = false, 4000)"
+    role="alert"
+    class="flex items-start gap-3 p-4 rounded-lg shadow-lg border-l-4 {% if message.tags == 'error' %} border-red-700 bg-red-50 text-red-700 {% endif %} {% if message.tags == 'success' %} border-teal-700 bg-teal-50 text-teal-700 {% endif %} {% if message.tags == 'warning' %} border-yellow-700 bg-yellow-50 text-yellow-700 {% endif %} {% if message.tags == 'info' %} border-blue-700 bg-blue-50 text-blue-700 {% endif %}"
+  >
+    <!-- Icon -->
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="w-5 h-5 flex-shrink-0"
+      fill="currentColor"
+      viewBox="0 0 24 24"
+    >
+      {% if message.tags == 'error' %}
+      <!-- Error / Cross icon -->
+      <path
+        fill-rule="evenodd"
+        d="M12 2a10 10 0 100 20 10 10 0 000-20zm3.535 13.535a1 1 0 01-1.414 1.414L12 13.414l-2.121 2.121a1 1 0 01-1.414-1.414L10.586 12 8.464 9.879a1 1 0 011.414-1.414L12 10.586l2.121-2.121a1 1 0 011.414 1.414L13.414 12l2.121 2.121z"
+        clip-rule="evenodd"
+      />
+      {% elif message.tags == 'success' %}
+      <!-- Check / Success icon -->
+      <path
+        fill-rule="evenodd"
+        d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm-1 15l-5-5 1.414-1.414L11 14.172l7.586-7.586L20 8l-9 9z"
+        clip-rule="evenodd"
+      />
+      {% elif message.tags == 'warning' %}
+      <!-- Warning / Exclamation icon -->
+      <path
+        fill-rule="evenodd"
+        d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 14h-2v-2h2v2zm0-4h-2V6h2v6z"
+        clip-rule="evenodd"
+      />
+      {% elif message.tags == 'info' %}
+      <!-- Info / "i" icon -->
+      <path
+        fill-rule="evenodd"
+        d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+        clip-rule="evenodd"
+      />
+      {% endif %}
+    </svg>
+
+    <!-- Message -->
+    <div class="flex-1 text-sm font-medium">{{ message }}</div>
+
+    <!-- Dismiss button -->
+    <button @click="show = false" class="text-lg font-bold hover:opacity-70">
+      ✕
+    </button>
+  </div>
+  {% endfor %} 
+  {% endif %}
+</div>

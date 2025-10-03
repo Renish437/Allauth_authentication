@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n allauth %}
+
+{% block head_title %}
+    {% trans "Sign Up" %}
+{% endblock head_title %}
+
+{% block content %}
+<div class="max-w-xl mx-auto p-6 bg-white shadow rounded space-y-4">
+
+    <h1 class="text-2xl font-semibold">
+        {% trans "Sign Up" %}
+    </h1>
+
+    <p class="text-gray-700">
+        {% blocktrans with provider_name=account.get_provider.name site_name=site.name %}
+            You are about to use your {{ provider_name }} account to log in to {{ site_name }}. As a final step, please complete the following form:
+        {% endblocktrans %}
+    </p>
+
+    {% url 'socialaccount_signup' as action_url %}
+    <form method="post" action="{{ action_url }}">
+        {% csrf_token %}
+        <div class="space-y-4">
+            {{ form.as_p }}
+        </div>
+        {{ redirect_field }}
+        <div class="mt-4">
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                {% trans "Sign Up" %}
+            </button>
+        </div>
+    </form>
+
+</div>
+{% endblock content %}

@@ -1,0 +1,104 @@
+{% extends "account/base_entrance.html" %}
+{% load i18n %}
+{% load allauth account %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+        {% setvar title_ %}
+            {% block title %}{% endblock %}
+        {% endsetvar %}
+        {% setvar action_url %}
+            {% block action_url %}{% endblock %}
+        {% endsetvar %}
+        {% setvar recipient %}
+            {% block recipient %}{% endblock %}
+        {% endsetvar %}
+
+        <!-- Title -->
+        <h1 class="text-2xl font-extrabold text-gray-800 text-center mb-4">
+            {{ title_ }}
+        </h1>
+
+        <!-- Instruction -->
+        <p class="text-center text-gray-600 mb-6">
+            {% blocktranslate %}We've sent a code to <span class="font-medium">{{ recipient }}</span>. The code expires shortly, so please enter it soon.{% endblocktranslate %}
+        </p>
+
+        <!-- Verification Form -->
+        {% element form form=verify_form method="post" action=action_url tags="entrance,email-verification" %}
+            {% slot body %}
+                {% csrf_token %}
+                <div class="space-y-4">
+                    {% element fields form=verify_form unlabeled=True %}{% endelement %}
+                </div>
+                {{ redirect_field }}
+            {% endslot %}
+
+            {% slot actions %}
+                <div class="flex flex-col gap-3 mt-4">
+                    {% element button type="submit" tags="confirm,email-verification" %}
+                        {% translate "Confirm" %}
+                    {% endelement %}
+
+                    {% if can_resend %}
+                        {% element button form="resend" tags="outline,resend w-full py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition" %}
+                            {% translate "Request new code" %}
+                        {% endelement %}
+                    {% endif %}
+
+                    {% if cancel_url %}
+                        {% element button href=cancel_url tags="outline,cancel w-full py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition" %}
+                            {% translate "Cancel" %}
+                        {% endelement %}
+                    {% else %}
+                        {% element button type="submit" form="logout-from-stage" tags="outline,cancel w-full py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition" %}
+                            {% translate "Cancel" %}
+                        {% endelement %}
+                    {% endif %}
+                </div>
+            {% endslot %}
+        {% endelement %}
+
+        <!-- Hidden forms for Resend and Logout -->
+        <form id="resend" method="post" action="{{ action_url }}">
+            <input type="hidden" name="action" value="resend">
+            {{ redirect_field }}
+            {% csrf_token %}
+        </form>
+
+        {% if not cancel_url %}
+        <form id="logout-from-stage" method="post" action="{% url 'account_logout' %}">
+            <input type="hidden" name="next" value="{% url 'account_login' %}">
+            {% csrf_token %}
+        </form>
+        {% endif %}
+
+        {% setvar summary_ %}
+            {% block change_title %}{% endblock %}
+        {% endsetvar %}
+
+        {% if can_change %}
+        <details class="mt-6" open="{{ change_form.errors }}">
+            <summary class="cursor-pointer text-purple-600 font-semibold">{{ summary_ }}</summary>
+            <div class="mt-4">
+                {% element form form=change_form method="post" action=action_url %}
+                    {% slot body %}
+                        {% csrf_token %}
+                        <div class="space-y-4">
+                            {% element fields form=change_form unlabeled=True %}{% endelement %}
+                        </div>
+                        {{ redirect_field }}
+                    {% endslot %}
+                    {% slot actions %}
+                        {% element button name="action" value="change" type="submit" class="w-full py-3 bg-purple-600 text-white rounded-xl font-bold hover:bg-purple-700 transition" %}
+                            Change
+                        {% endelement %}
+                    {% endslot %}
+                {% endelement %}
+            </div>
+        </details>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}

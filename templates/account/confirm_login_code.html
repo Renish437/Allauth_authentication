@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load allauth account %}
+{% load widget_tweaks %}
+
+{% block head_title %}
+    {% translate "Sign In" %}
+{% endblock head_title %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+        <!-- Title -->
+        <h1 class="text-2xl font-extrabold text-gray-800 text-center mb-4">
+            {% block title %}{% endblock %}
+        </h1>
+
+        <!-- Recipient info -->
+        <p class="text-center text-gray-600 mb-6">
+            {% blocktranslate %}
+            We've sent a code to {{ block.super }}. Enter it below to continue.
+            {% endblocktranslate %}
+            {% block recipient %}{% endblock %}
+        </p>
+
+        <!-- Confirmation form -->
+        <form method="post" action="{% block action_url %}{% endblock %}" class="space-y-5">
+            {% csrf_token %}
+            {% element fields form=verify_form unlabeled=True %}
+            {% endelement %}
+            {{ redirect_field }}
+
+            <button type="submit" class="w-full py-3 bg-purple-600 text-white rounded-xl font-bold text-lg hover:bg-purple-700 transition">
+                {% translate "Confirm" %}
+            </button>
+        </form>
+
+        <!-- Resend code -->
+        {% if can_resend %}
+            <form method="post" action="{% block action_url %}{% endblock %}" class="mt-4 text-center">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="resend">
+                <button type="submit" class="text-purple-600 font-semibold hover:underline">
+                    {% translate "Request new code" %}
+                </button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}

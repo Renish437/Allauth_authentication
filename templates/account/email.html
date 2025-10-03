@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load static allauth i18n widget_tweaks %}
+
+{% block head_title %}
+    {% trans "Email Addresses" %}
+{% endblock head_title %}
+
+{% block content %}
+<div class="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4 py-8">
+    <div class="w-full max-w-2xl bg-white rounded-2xl shadow-xl p-8 space-y-6">
+
+        <!-- Title -->
+        <h1 class="text-2xl font-extrabold text-gray-800 text-center">
+            {% trans "Email Addresses" %}
+        </h1>
+
+        {% if emailaddresses %}
+            <p class="text-gray-600 text-center">
+                {% trans 'The following email addresses are associated with your account:' %}
+            </p>
+
+            <!-- Email list form -->
+            {% url 'account_email' as email_url %}
+            <form method="post" action="{{ email_url }}" class="space-y-4 bg-gray-50 p-4 rounded-lg shadow-inner">
+                {% csrf_token %}
+                {% for radio in emailaddress_radios %}
+                    {% with emailaddress=radio.emailaddress %}
+                        <label class="flex items-center justify-between p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-100">
+                            <div class="flex items-center gap-3">
+                                <input type="radio" name="email" value="{{ emailaddress.email }}" {% if radio.checked %}checked{% endif %} class="form-radio h-5 w-5 text-purple-600">
+                                <span class="text-gray-800 font-medium">{{ emailaddress.email }}</span>
+                                {% if emailaddress.primary %}
+                                    <span class="ml-2 px-2 py-0.5 bg-purple-100 text-purple-800 text-xs font-semibold rounded">Primary</span>
+                                {% endif %}
+                                {% if emailaddress.verified %}
+                                    <span class="ml-2 px-2 py-0.5 bg-green-100 text-green-800 text-xs font-semibold rounded">Verified</span>
+                                {% else %}
+                                    <span class="ml-2 px-2 py-0.5 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded">Unverified</span>
+                                {% endif %}
+                            </div>
+                        </label>
+                    {% endwith %}
+                {% endfor %}
+
+                <!-- Action buttons -->
+                <div class="flex flex-wrap gap-3 mt-4">
+                    <button type="submit" name="action_primary" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-sm font-semibold">
+                        {% trans 'Make Primary' %}
+                    </button>
+                    <button type="submit" name="action_send" class="px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition text-sm font-semibold">
+                        {% trans 'Re-send Verification' %}
+                    </button>
+                    <button type="submit" name="action_remove" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition text-sm font-semibold">
+                        {% trans 'Remove' %}
+                    </button>
+                </div>
+            </form>
+        {% else %}
+            <div class="p-4 bg-yellow-100 text-yellow-800 rounded-lg text-center">
+                {% include "account/snippets/warn_no_email.html" %}
+            </div>
+        {% endif %}
+
+        <!-- Add new email -->
+        {% if can_add_email %}
+            <h2 class="text-xl font-semibold text-gray-800 mt-6">
+                {% trans "Add Email Address" %}
+            </h2>
+            {% url 'account_email' as action_url %}
+            <form method="post" action="{{ action_url }}" class="space-y-4 mt-2">
+                {% csrf_token %}
+                {% render_field form.email class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" %}
+                <button type="submit" name="action_add" class="w-full py-3 bg-purple-600 text-white rounded-xl font-bold text-lg hover:bg-purple-700 transition">
+                    {% trans "Add Email" %}
+                </button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_body %}
+    <script src="{% static 'account/js/account.js' %}"></script>
+    <script src="{% static 'account/js/onload.js' %}"></script>
+    <script type="application/json" data-allauth-onload="allauth.account.forms.manageEmailForm">
+        {
+            "i18n": {"confirmDelete": "{% trans 'Do you really want to remove the selected email address?' %}"}
+        }
+    </script>
+{% endblock extra_body %}

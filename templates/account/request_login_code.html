@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load allauth %}
+{% load i18n %}
+{% load widget_tweaks %} {# Needed for render_field #}
+
+{% block head_title %}
+    {% trans "Sign In Code" %}
+{% endblock head_title %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 space-y-6">
+        <!-- Title -->
+        <h1 class="text-2xl font-extrabold text-gray-800 text-center">
+            {% trans "Send me a sign-in code" %}
+        </h1>
+
+        <!-- Instructions -->
+        <p class="text-gray-600 text-center">
+            {% blocktrans %}You will receive a special code for a password-free sign-in.{% endblocktrans %}
+        </p>
+
+        <!-- Sign-In Code Form -->
+        {% url 'account_request_login_code' as login_url %}
+        <form method="post" action="{{ login_url }}" class="space-y-4">
+            {% csrf_token %}
+
+            <div>
+                <label for="{{ form.login.id_for_label }}" class="block mb-2 font-medium text-gray-700">
+                    {% trans "Email" %}
+                </label>
+                {% render_field form.email class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" placeholder="Enter email " %}
+                {% if form.login.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.login.errors|striptags }}</p>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="w-full py-3 bg-purple-600 text-white rounded-xl font-bold text-lg hover:bg-purple-700 transition">
+                {% trans "Request Code" %}
+            </button>
+        </form>
+
+        <div class="text-center mt-4">
+            {% url 'account_login' as login_url %}
+            <a href="{{ login_url }}" class="text-purple-600 hover:underline">
+                {% trans "Other sign-in options" %}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load i18n allauth %}
+
+{% block head_title %}
+    {% trans "Two-Factor Authentication" %}
+{% endblock head_title %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto space-y-6">
+
+    <h1 class="text-3xl font-bold text-gray-800">{% trans "Two-Factor Authentication" %}</h1>
+
+    <!-- Authenticator App (TOTP) -->
+    {% if "totp" in MFA_SUPPORTED_TYPES %}
+        <div class="bg-white shadow-md rounded-lg p-6 space-y-4">
+            <h2 class="text-xl font-semibold">{% trans "Authenticator App" %}</h2>
+            <p>
+                {% if authenticators.totp %}
+                    {% trans "Authentication using an authenticator app is active." %}
+                {% else %}
+                    {% trans "An authenticator app is not active." %}
+                {% endif %}
+            </p>
+            <div class="flex space-x-2">
+                {% url 'mfa_activate_totp' as activate_url %}
+                {% url 'mfa_deactivate_totp' as deactivate_url %}
+                {% if authenticators.totp %}
+                    <a href="{{ deactivate_url }}" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                        {% trans "Deactivate" %}
+                    </a>
+                {% else %}
+                    <a href="{{ activate_url }}" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">
+                        {% trans "Activate" %}
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Security Keys (WebAuthn) -->
+    {% if "webauthn" in MFA_SUPPORTED_TYPES %}
+        <div class="bg-white shadow-md rounded-lg p-6 space-y-4">
+            <h2 class="text-xl font-semibold">{% trans "Security Keys" %}</h2>
+            <p>
+                {% if authenticators.webauthn|length %}
+                    {% blocktranslate count count=authenticators.webauthn|length %}
+                        You have added {{ count }} security key.
+                    {% plural %}
+                        You have added {{ count }} security keys.
+                    {% endblocktranslate %}
+                {% else %}
+                    {% trans "No security keys have been added." %}
+                {% endif %}
+            </p>
+            <div class="flex space-x-2">
+                {% if authenticators.webauthn|length %}
+                    {% url 'mfa_list_webauthn' as webauthn_list_url %}
+                    <a href="{{ webauthn_list_url }}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+                        {% trans "Manage" %}
+                    </a>
+                {% else %}
+                    {% url 'mfa_add_webauthn' as webauthn_add_url %}
+                    <a href="{{ webauthn_add_url }}" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">
+                        {% trans "Add" %}
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Recovery Codes -->
+    {% if "recovery_codes" in MFA_SUPPORTED_TYPES %}
+        {% with total_count=authenticators.recovery_codes.generate_codes|length unused_count=authenticators.recovery_codes.get_unused_codes|length %}
+            <div class="bg-white shadow-md rounded-lg p-6 space-y-4">
+                <h2 class="text-xl font-semibold">{% trans "Recovery Codes" %}</h2>
+                <p>
+                    {% if authenticators.recovery_codes %}
+                        {% blocktranslate count unused_count=unused_count %}
+                            There is {{ unused_count }} out of {{ total_count }} recovery codes available.
+                        {% plural %}
+                            There are {{ unused_count }} out of {{ total_count }} recovery codes available.
+                        {% endblocktranslate %}
+                    {% else %}
+                        {% trans "No recovery codes set up." %}
+                    {% endif %}
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    {% if is_mfa_enabled and authenticators.recovery_codes %}
+                        {% if unused_count > 0 %}
+                            {% url 'mfa_view_recovery_codes' as view_url %}
+                            <a href="{{ view_url }}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+                                {% trans "View" %}
+                            </a>
+                            {% url 'mfa_download_recovery_codes' as download_url %}
+                            <a href="{{ download_url }}" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+                                {% trans "Download" %}
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                    {% url 'mfa_generate_recovery_codes' as generate_url %}
+                    <a href="{{ generate_url }}" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">
+                        {% trans "Generate" %}
+                    </a>
+                </div>
+            </div>
+        {% endwith %}
+    {% endif %}
+
+</div>
+{% endblock content %}

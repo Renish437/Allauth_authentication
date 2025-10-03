@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load i18n allauth %}
+
+{% block content %}
+<div class=" flex items-center justify-center  px-4">
+  <div class="bg-white  rounded-xl shadow-lg p-8 max-w-md w-full text-center">
+    <!-- Icon -->
+    <div class="flex justify-center mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m0-9V5m-7 7h.01M17 12h.01M12 7h.01M12 17h.01M7 12h.01" />
+      </svg>
+    </div>
+
+    <!-- Message -->
+    <h2 class="text-2xl font-bold text-gray-800  mb-2">{% trans "Confirm Logout" %}</h2>
+    <p class="text-gray-600 dark:text-gray-400 mb-6">
+      {% trans "Are you sure you want to log out of your account?" %}
+    </p>
+
+    <!-- Buttons -->
+    <div class="flex justify-center gap-4">
+      <form method="post" action="{% url 'account_logout' %}">
+        {% csrf_token %}
+        <button type="submit"
+          class="px-6 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg shadow-md transition">
+          {% trans "Logout" %}
+        </button>
+      </form>
+      <a href="{% url 'account_login' %}"
+         class="px-6 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 font-semibold rounded-lg shadow-md transition">
+        {% trans "Cancel" %}
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+

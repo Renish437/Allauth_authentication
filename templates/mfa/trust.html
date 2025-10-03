@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load i18n allauth static %}
+
+{% block head_title %}
+    {% trans "Trust this Browser?" %}
+{% endblock head_title %}
+
+{% block content %}
+<div class="max-w-md mx-auto bg-white shadow-md rounded-lg p-6 space-y-6">
+
+    <h1 class="text-2xl font-bold text-gray-800">{% trans "Trust this Browser?" %}</h1>
+
+    <p class="text-gray-700">
+        {% blocktranslate %}
+            If you choose to trust this browser, you will not be asked for a verification code the next time you sign in.
+        {% endblocktranslate %}
+    </p>
+
+    {% url 'mfa_trust' as action_url %}
+    <form method="post" action="{{ action_url }}" class="space-y-4">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <div class="flex flex-col sm:flex-row sm:space-x-3 space-y-2 sm:space-y-0">
+            <button type="submit" name="action" value="trust" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 flex-1">
+                {% blocktranslate with period=trust_until|timeuntil:trust_from %}
+                    Trust for {{ period }}
+                {% endblocktranslate %}
+            </button>
+
+            <button type="submit" name="action" value="skip" class="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 flex-1">
+                {% trans "Don't Trust" %}
+            </button>
+
+            <button type="submit" form="logout-from-stage" class="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 flex-1">
+                {% trans "Cancel" %}
+            </button>
+        </div>
+    </form>
+
+</div>
+
+<form id="logout-from-stage" method="post" action="{% url 'account_logout' %}" class="hidden">
+    <input type="hidden" name="next" value="{% url 'account_login' %}">
+    {% csrf_token %}
+</form>
+{% endblock content %}

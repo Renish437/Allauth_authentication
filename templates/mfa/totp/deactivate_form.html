@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n allauth %}
+
+{% block head_title %}{% trans "Deactivate Authenticator App" %}{% endblock head_title %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">{% trans "Deactivate Authenticator App" %}</h1>
+<p class="mb-4 text-gray-700">{% trans "Are you sure you want to deactivate your authenticator app?" %}</p>
+
+{% url 'mfa_deactivate_totp' as action_url %}
+<form method="post" action="{{ action_url }}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded">{% trans "Deactivate" %}</button>
+</form>
+{% endblock %}

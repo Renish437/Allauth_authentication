@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load i18n allauth %}
+
+{% block content %}
+<div class="max-w-xl mx-auto bg-white shadow-md rounded-lg p-8 space-y-6">
+
+    <!-- Title -->
+    {% element h1 %}
+        {% translate "Recovery Codes" %}
+    {% endelement %}
+
+    <!-- Info message -->
+    <div class="text-gray-700 space-y-3">
+        {% element p %}
+            {% blocktranslate %}
+                You are about to generate a new set of recovery codes for your account.
+            {% endblocktranslate %}
+        {% endelement %}
+
+        {% if unused_code_count %}
+            <div class="p-4 border border-red-200 bg-red-50 rounded-md">
+                <p class="text-red-600 font-medium">
+                    {% blocktranslate %}
+                        This action will invalidate your existing codes.
+                    {% endblocktranslate %}
+                </p>
+            </div>
+        {% endif %}
+
+        {% element p %}
+            {% blocktranslate %}
+                Are you sure you want to continue?
+            {% endblocktranslate %}
+        {% endelement %}
+    </div>
+
+    <!-- Form -->
+    {% url 'mfa_generate_recovery_codes' as action_url %}
+    {% element form method="post" action=action_url no_visible_fields=True %}
+        {% slot body %}
+            {% csrf_token %}
+            {{ form.as_p }}
+        {% endslot %}
+        {% slot actions %}
+            {% setvar tags %}
+                {% if unused_code_count %}
+                    danger
+                {% else %}
+                    primary
+                {% endif %}
+            {% endsetvar %}
+            {% element button type="submit" tags=tags %}
+                {% trans "Generate" %}
+            {% endelement %}
+        {% endslot %}
+    {% endelement %}
+
+</div>
+{% endblock content %}

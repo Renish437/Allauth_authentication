@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n allauth %}
+
+{% block head_title %}
+    {% trans "Third-Party Login Failure" %}
+{% endblock head_title %}
+
+{% block content %}
+<div class="max-w-md mx-auto bg-white shadow-md rounded-lg p-6 space-y-6 text-center">
+
+    <!-- Title -->
+    <h1 class="text-2xl font-bold text-gray-800">
+        {% trans "Third-Party Login Failure" %}
+    </h1>
+
+    <!-- Message -->
+    <p class="text-gray-700">
+        {% trans "An error occurred while attempting to login via your third-party account." %}
+    </p>
+
+</div>
+{% endblock content %}

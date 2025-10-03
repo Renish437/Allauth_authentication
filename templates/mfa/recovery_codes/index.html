@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load i18n allauth %}
+
+{% block content %}
+<div class="max-w-xl mx-auto bg-white shadow-md rounded-lg p-6 space-y-6">
+
+    <!-- Page title -->
+    {% element h1 %}
+        {% translate "Recovery Codes" %}
+    {% endelement %}
+
+    <!-- Info about how many codes left -->
+    <p class="text-gray-600">
+        {% blocktranslate count unused_count=unused_codes|length %}
+            There is {{ unused_count }} out of {{ total_count }} recovery code available.
+        {% plural %}
+            There are {{ unused_count }} out of {{ total_count }} recovery codes available.
+        {% endblocktranslate %}
+    </p>
+
+    <!-- Recovery codes textarea -->
+    {% element field id="recovery_codes" type="textarea" disabled=True rows=unused_codes|length readonly=True %}
+        {% slot label %}
+            {% translate "Unused codes" %}
+        {% endslot %}
+        {% slot value %}
+            {% for code in unused_codes %}
+                {{ code }}
+            {% endfor %}
+        {% endslot %}
+    {% endelement %}
+
+    <!-- Action buttons -->
+    <div class="flex gap-3">
+        {% if unused_codes %}
+            {% url 'mfa_download_recovery_codes' as download_url %}
+            {% element button href=download_url tags="secondary" %}
+                {% translate "Download codes" %}
+            {% endelement %}
+        {% endif %}
+
+        {% url 'mfa_generate_recovery_codes' as generate_url %}
+        {% element button href=generate_url tags="danger" %}
+            {% translate "Generate new codes" %}
+        {% endelement %}
+    </div>
+
+</div>
+{% endblock content %}
