@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path,include
 from allauth.socialaccount.providers.oauth2.views import OAuth2Adapter
 from django.conf import settings
-
+from . import views
 # No direct setting — but you can monkey patch:
 import allauth.socialaccount.providers.github.views as gh
 
@@ -27,6 +27,8 @@ gh.oauth2_login = gh.oauth2_login  # override if needed for debugging
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('',views.home,name="home"),
+    path('',include('accounts.urls')),
+    
     path('accounts/', include('allauth.urls')),
-    path('',include('accounts.urls'))
 ]

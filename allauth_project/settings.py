@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-5&0dmd%xhavk#o3n9)*tr*ql@@a57#_)ozgfb6)*tj4l81vnty'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -159,6 +159,8 @@ LOGIN_REDIRECT_URL = '/'
 
 #Important
 
+
+
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_EMAIL_VERIFICATION = "mandatory" # Verified user is only allowed to login   "optional" (by default) "mandatory"(required makes)
 ACCOUNT_EMAIL_NOTIFICATIONS = True    # When "changed password" or "reset password done" then notification will be sent to particular user by default = False
@@ -166,6 +168,7 @@ ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True # automatically logouts when password i
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_USERNAME_BLACKLIST =['admin','renish437','youtube']
 ACCOUNT_USERNAME_MIN_LENGTH = 3 # BY DEFAULT 1 MAKE IT 3
+
 
 # Rate Limter
 ACCOUNT_RATE_LIMITS = {

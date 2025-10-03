@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
+    <div class="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
+        <h1 class="text-4xl font-extrabold text-gray-800 mb-4">429</h1>
+        <p class="text-gray-600 mb-6">
+            Too many requests. Please wait a few minutes before trying again.
+        </p>
+     <button onclick="history.back()" 
+                class="inline-block px-6 py-3 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700 transition">
+            Back
+        </button>
+    </div>
+</div>
+{% endblock content %}

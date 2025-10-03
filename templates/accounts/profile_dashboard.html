@@ -1,0 +1,167 @@
+<!-- accounts/profile_dashboard.html -->
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+
+<div x-data="{ tab: 'profile' }" class="min-h-screen bg-gray-50 py-10 px-4">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row gap-6">
+        <!-- Sidebar -->
+        <div class="md:w-1/4 bg-white rounded-xl shadow-lg p-6 space-y-4">
+            <div class="text-center">
+                <h2 class="text-xl font-semibold text-gray-800">{{ user.username }}</h2>
+                <p class="text-gray-500 text-sm">{{ user.email }}</p>
+            </div>
+            <nav class="space-y-2 mt-6">
+                <button 
+                    @click="tab = 'profile'" 
+                    :class="tab === 'profile' ? 'bg-purple-100 font-semibold' : ''"
+                    class="w-full text-left py-2 px-4 rounded hover:bg-purple-50">
+                    Profile
+                </button>
+                <button 
+                    @click="tab = 'edit'" 
+                    :class="tab === 'edit' ? 'bg-purple-100 font-semibold' : ''"
+                    class="w-full text-left py-2 px-4 rounded hover:bg-purple-50">
+                    Edit Profile
+                </button>
+                <button 
+                    @click="tab = 'password'" 
+                    :class="tab === 'password' ? 'bg-purple-100 font-semibold' : ''"
+                    class="w-full text-left py-2 px-4 rounded hover:bg-purple-50">
+                    Change Password
+                </button>
+                <button 
+                    @click="tab = 'logout'" 
+                    :class="tab === 'logout' ? 'bg-purple-100 font-semibold' : ''"
+                    class="w-full text-left py-2 px-4 rounded hover:bg-purple-50">
+                    Logout
+                </button>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="md:w-3/4 bg-white rounded-xl shadow-lg p-6">
+            
+            <!-- Profile Section -->
+            <div x-show="tab === 'profile'" x-cloak>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Profile Information</h2>
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-gray-600 font-medium">Username</label>
+                        <p class="text-gray-800">{{ user.username }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-gray-600 font-medium">Email</label>
+                        <p class="text-gray-800">{{ user.email }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Profile Section -->
+            <div x-show="tab === 'edit'" x-cloak>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Edit Profile</h2>
+                
+            <form method="post" action="{% url 'profile_dashboard' %}" class="space-y-4">
+    {% csrf_token %}
+    
+    <div>
+        <label class="block text-gray-600 font-medium">Username</label>
+        {% render_field form.username class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" %}
+        {% if form.username.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.username.errors|striptags }}</p>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label class="block text-gray-600 font-medium">Email</label>
+        {% render_field form.email class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" %}
+        {% if form.email.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.email.errors|striptags }}</p>
+        {% endif %}
+    </div>
+    
+    <button type="submit" class="w-full py-3 bg-purple-600 text-white rounded-xl font-bold text-lg hover:bg-purple-700 transition">
+        Save Changes
+    </button>
+</form>
+
+            </div>
+
+            <!-- Change Password Section -->
+ <!-- Change / Set Password Section -->
+<div x-show="tab === 'password'" x-cloak>
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">
+        {% if is_social_only %}Set Password{% else %}Change Password{% endif %}
+    </h2>
+    <form method="post" action="{% url 'profile_dashboard' %}" class="space-y-4">
+        {% csrf_token %}
+
+        {% if not is_social_only %}
+        <div>
+            <label class="block text-gray-600 font-medium">Current Password</label>
+            {% render_field password_form.old_password class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" %}
+            {% if password_form.old_password.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ password_form.old_password.errors|striptags }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div>
+            <label class="block text-gray-600 font-medium">New Password</label>
+            {% render_field password_form.new_password1 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" %}
+            {% if password_form.new_password1.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ password_form.new_password1.errors|striptags }}</p>
+            {% endif %}
+        </div>
+
+        <div>
+            <label class="block text-gray-600 font-medium">Confirm New Password</label>
+            {% render_field password_form.new_password2 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" %}
+            {% if password_form.new_password2.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ password_form.new_password2.errors|striptags }}</p>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-purple-600 text-white rounded-xl font-bold text-lg hover:bg-purple-700 transition">
+            {% if is_social_only %}Set Password{% else %}Update Password{% endif %}
+        </button>
+    </form>
+</div>
+<!-- Logout Section -->
+<div x-show="tab === 'logout'" x-cloak class="flex items-center justify-center min-h-[200px]">
+  <div class="bg-white rounded-xl  p-8 max-w-md w-full text-center">
+    <!-- Icon -->
+    <div class="flex justify-center mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m0-9V5m-7 7h.01M17 12h.01M12 7h.01M12 17h.01M7 12h.01" />
+      </svg>
+    </div>
+
+    <!-- Message -->
+    <h2 class="text-2xl font-bold text-gray-800 mb-2">Confirm Logout</h2>
+    <p class="text-gray-600 mb-6">Are you sure you want to log out of your account?</p>
+
+    <!-- Buttons -->
+    <div class="flex justify-center gap-4">
+      <form method="post" action="{% url 'account_logout' %}">
+        {% csrf_token %}
+        <button type="submit"
+          class="px-6 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg shadow-md transition">
+          Logout
+        </button>
+      </form>
+      <button @click="tab='profile'" 
+        class="px-6 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold rounded-lg shadow-md transition">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

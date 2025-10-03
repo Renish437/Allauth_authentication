@@ -3,9 +3,9 @@
 {% load widget_tweaks %}
 {% load socialaccount %} 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 px-4">
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 px-4 py-4">
     <div class="max-w-xl w-full bg-white rounded-2xl shadow-xl p-8">
-        <h1 class="text-3xl font-extrabold text-gray-800 text-center mb-6">Sign Up</h1>
+        <h1 class="text-3xl font-extrabold text-gray-800 text-center mb-6 ">Sign Up</h1>
 
         <p class="text-center text-gray-500 mb-6">
             {% blocktranslate %}
@@ -15,35 +15,38 @@
         </p>
 
         {% if not SOCIALACCOUNT_ONLY %}
-            <form method="post" action="{% url 'account_signup' %}" class="space-y-5" novalidate>
+                 <form method="post" action="{% url 'account_signup' %}" class="space-y-5" novalidate onsubmit="return checkAgreement()">
                 {% csrf_token %}
                 {{ redirect_field }}
 
-                <!-- Signup Fields -->
+                <!-- Username -->
                 <div>
                     <label for="{{ form.username.id_for_label }}" class="block mb-2 font-medium text-gray-700">Username</label>
-                    {% render_field form.username class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" %}
+                    {% render_field form.username class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" %}
                     {% if form.username.errors %}
                         <p class="mt-1 text-sm text-red-600">{{ form.username.errors|striptags }}</p>
                     {% endif %}
                 </div>
 
+                <!-- Email -->
                 <div>
                     <label for="{{ form.email.id_for_label }}" class="block mb-2 font-medium text-gray-700">Email</label>
-                    {% render_field form.email class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" %}
+                    {% render_field form.email class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" %}
                     {% if form.email.errors %}
                         <p class="mt-1 text-sm text-red-600">{{ form.email.errors|striptags }}</p>
                     {% endif %}
                 </div>
 
+                <!-- Password -->
                 <div>
                     <label for="{{ form.password1.id_for_label }}" class="block mb-2 font-medium text-gray-700">Password</label>
-                    {% render_field form.password1 class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" %}
+                    {% render_field form.password1 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" %}
                     {% if form.password1.errors %}
                         <p class="mt-1 text-sm text-red-600">{{ form.password1.errors|striptags }}</p>
                     {% endif %}
                 </div>
 
+                <!-- Confirm Password -->
                 <div>
                     <label for="{{ form.password2.id_for_label }}" class="block mb-2 font-medium text-gray-700">Confirm Password</label>
                     {% render_field form.password2 class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" %}
@@ -51,6 +54,15 @@
                         <p class="mt-1 text-sm text-red-600">{{ form.password2.errors|striptags }}</p>
                     {% endif %}
                 </div>
+
+                <!-- Terms Checkbox -->
+               <div class="flex flex-col items-start gap-1 mb-4">
+    <label class="flex items-center gap-2 text-gray-700 font-medium" for="agree">
+        <input type="checkbox" class="h-4 w-4 text-purple-600 border-gray-300 rounded accent-purple-500" >
+        I agree to the <a href="{%url 'terms'%}" class="text-purple-600 hover:underline">terms and conditions</a>
+    </label>
+ 
+</div>
 
                 <!-- Submit Button -->
                 <button type="submit" class="w-full py-3 bg-purple-600 text-white rounded-xl font-bold text-lg hover:bg-purple-700 transition">
