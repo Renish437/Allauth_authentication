@@ -2,15 +2,15 @@
 {% load i18n allauth %}
 
 {% block content %}
-<div class="max-w-xl mx-auto bg-white shadow-md rounded-lg p-6 space-y-6">
+<div class="max-w-xl mx-auto bg-white shadow-md rounded-lg p-8 mt-5 space-y-6">
 
     <!-- Page title -->
-    {% element h1 %}
-        {% translate "Recovery Codes" %}
-    {% endelement %}
+    <h1 class="text-2xl font-bold text-center text-purple-600">
+        {% trans "Recovery Codes" %}
+    </h1>
 
     <!-- Info about how many codes left -->
-    <p class="text-gray-600">
+    <p class="text-gray-700 text-center">
         {% blocktranslate count unused_count=unused_codes|length %}
             There is {{ unused_count }} out of {{ total_count }} recovery code available.
         {% plural %}
@@ -18,31 +18,37 @@
         {% endblocktranslate %}
     </p>
 
-    <!-- Recovery codes textarea -->
-    {% element field id="recovery_codes" type="textarea" disabled=True rows=unused_codes|length readonly=True %}
-        {% slot label %}
-            {% translate "Unused codes" %}
-        {% endslot %}
-        {% slot value %}
-            {% for code in unused_codes %}
-                {{ code }}
-            {% endfor %}
-        {% endslot %}
-    {% endelement %}
-
+    <!-- Recovery codes box -->
+    <div class="bg-purple-50 border border-purple-200 rounded-md p-4 font-mono text-purple-800 text-center">
+        {% for code in unused_codes %}
+            <span class="block py-1">{{ code }}</span>
+        {% empty %}
+            <p class="text-gray-400">No recovery codes available.</p>
+        {% endfor %}
+    </div>
+          <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-10">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9.75v6.75m0 0-3-3m3 3 3-3m-8.25 6a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
+</svg>
     <!-- Action buttons -->
-    <div class="flex gap-3">
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
         {% if unused_codes %}
             {% url 'mfa_download_recovery_codes' as download_url %}
-            {% element button href=download_url tags="secondary" %}
-                {% translate "Download codes" %}
-            {% endelement %}
+            <a href="{{ download_url }}"
+               class="w-full sm:w-auto text-center px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition">
+     
+
+                {% trans "Download codes" %}
+            </a>
         {% endif %}
 
         {% url 'mfa_generate_recovery_codes' as generate_url %}
-        {% element button href=generate_url tags="danger" %}
-            {% translate "Generate new codes" %}
-        {% endelement %}
+        <a href="{{ generate_url }}"
+           class="w-full sm:w-auto text-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition">
+            {% trans "Generate new codes" %}
+        </a>
+          <a  href="{%url 'mfa_index' %}" class="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition">
+                {% trans "Cancel" %}
+            </a>
     </div>
 
 </div>

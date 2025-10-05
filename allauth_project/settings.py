@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.google',
+    
+     #pip install django-two-factor-auth qrcode
+      "allauth.mfa", 
      'widget_tweaks',
 ]
 SITE_ID=1
@@ -89,6 +92,7 @@ AUTHENTICATION_BACKENDS = [
 
     # `allauth` specific authentication methods, such as login by email
    'allauth.account.auth_backends.AuthenticationBackend',
+   
  
 ]
 
@@ -154,8 +158,14 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = '/' 
-# ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login'
+# After successful login
+LOGIN_REDIRECT_URL = '/'  # or '/dashboard/' or whatever route you want
+
+# If a user tries to access a restricted page, they are redirected here
+LOGIN_URL = '/accounts/login/'
+
+# After logout
+LOGOUT_REDIRECT_URL = '/'  # Optional
 
 #Important
 
@@ -245,3 +255,8 @@ SOCIALACCOUNT_PROVIDERS = {
        'VERIFIED_EMAIL': True,  # keep False for local testing
    },
 }
+# MFA_FORMS = {
+#     'authenticate': 'mysite.forms.MyCustomAuthenticateForm',
+#     'reauthenticate': 'mysite.forms.MyCustomReauthenticateForm',
+#     'authenticate_webauthn': 'mysite.forms.MyCustomAuthenticateWebAuthnForm',
+# }

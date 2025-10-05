@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% load i18n allauth %}
-
+{% load i18n allauth static %}
+{% load widget_tweaks %}
 {% block head_title %}
     {% trans "Two-Factor Authentication" %}
 {% endblock head_title %}
 
 {% block content %}
-<div class="max-w-md mx-auto bg-white shadow-md rounded-lg p-6 space-y-6">
+<div class="max-w-md mx-auto bg-white shadow-md rounded-lg p-6 space-y-6 mt-5">
 
     <h1 class="text-2xl font-bold text-gray-800">{% trans "Two-Factor Authentication" %}</h1>
 
@@ -17,12 +17,33 @@
     {% url 'mfa_reauthenticate' as action_url %}
     <form method="post" action="{{ action_url }}" class="space-y-4">
         {% csrf_token %}
-        {{ form.as_p }}
+
+        {% if form %}
+            {% for field in form %}
+                <div class="flex flex-col">
+                    <label for="{{ field.id_for_label }}" class="mb-1 text-gray-700 font-medium">{{ field.label }}</label>
+                    {{ field|add_class:"w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" }}
+                    
+                    {% if field.help_text %}
+                        <small class="text-gray-500">{{ field.help_text }}</small>
+                    {% endif %}
+                    
+                    {% for error in field.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        {% endif %}
+
         {{ redirect_field }}
-        <div class="flex justify-end">
+
+        <div class="flex justify-end gap-3">
             <button type="submit" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">
                 {% trans "Confirm" %}
             </button>
+            <a href="{% url 'mfa_index' %}"  class="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition">
+                {% trans "Cancel" %}
+            </a>
         </div>
     </form>
 

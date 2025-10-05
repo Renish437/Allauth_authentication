@@ -49,7 +49,7 @@
                 <!-- Confirm Password -->
                 <div>
                     <label for="{{ form.password2.id_for_label }}" class="block mb-2 font-medium text-gray-700">Confirm Password</label>
-                    {% render_field form.password2 class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" %}
+                    {% render_field form.password2 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" %}
                     {% if form.password2.errors %}
                         <p class="mt-1 text-sm text-red-600">{{ form.password2.errors|striptags }}</p>
                     {% endif %}
@@ -58,7 +58,7 @@
                 <!-- Terms Checkbox -->
                <div class="flex flex-col items-start gap-1 mb-4">
     <label class="flex items-center gap-2 text-gray-700 font-medium" for="agree">
-        <input type="checkbox" class="h-4 w-4 text-purple-600 border-gray-300 rounded accent-purple-500" >
+        <input type="checkbox" id="agree" class="h-4 w-4 text-purple-600 border-gray-300 rounded accent-purple-500" >
         I agree to the <a href="{%url 'terms'%}" class="text-purple-600 hover:underline">terms and conditions</a>
     </label>
  

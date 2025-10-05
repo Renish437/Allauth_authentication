@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% load i18n allauth static %}
-
+{% load widget_tweaks %}
 {% block head_title %}
     {% trans "Two-Factor Authentication" %}
 {% endblock head_title %}
 
 {% block content %}
-<div class="max-w-md mx-auto bg-white shadow-lg rounded-2xl p-8 space-y-6">
+<div class="max-w-md mx-auto bg-white shadow-lg rounded-2xl p-8 space-y-6 mt-5">
 
     <!-- Title -->
     <h1 class="text-2xl font-bold text-gray-800 text-center">{% trans "Two-Factor Authentication" %}</h1>
@@ -20,15 +20,28 @@
     {% url 'mfa_authenticate' as action_url %}
     <form method="post" action="{{ action_url }}" class="space-y-4">
         {% csrf_token %}
-        {{ form.as_p }}
+      {% for field in form %}
+            <div class="flex flex-col">
+                <label for="{{ field.id_for_label }}" class="mb-1 text-gray-700 font-medium">{{ field.label }}</label>
+                {% render_field field class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" %}
+                {% if field.help_text %}
+                    <small class="text-gray-500">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <span class="text-red-600 text-sm mt-1">{{ error }}</span>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
         <div class="flex justify-between items-center">
             <button type="submit" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
                 {% trans "Sign In" %}
             </button>
             {% if "webauthn" not in MFA_SUPPORTED_TYPES %}
-                <button type="submit" form="logout-from-stage" class="text-gray-500 hover:underline">
-                    {% trans "Cancel" %}
-                </button>
+              
+                  <button type="button" form="logout-from-stage" class="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition">
+                {% trans "Cancel" %}
+            </button>
             {% endif %}
         </div>
     </form>

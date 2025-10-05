@@ -31,4 +31,5 @@ urlpatterns = [
     path('',include('accounts.urls')),
     
     path('accounts/', include('allauth.urls')),
+    
 ]

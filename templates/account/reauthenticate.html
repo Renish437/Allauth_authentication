@@ -1,5 +1,5 @@
-{% extends "account/base_entrance.html" %}
-{% load allauth i18n %}
+{% extends "base.html" %}
+{% load allauth i18n widget_tweaks %}
 
 {% block head_title %}
     {% trans "Confirm Access" %}
@@ -19,17 +19,19 @@
             {% blocktranslate %}Please reauthenticate to safeguard your account.{% endblocktranslate %}
         </p>
 
-        <!-- Reauthentication Form -->
         {% url 'account_reauthenticate' as action_url %}
         <form method="post" action="{{ action_url }}" class="space-y-4">
             {% csrf_token %}
 
+            <!-- Password Field -->
             <div>
                 <label for="{{ form.password.id_for_label }}" class="block mb-2 font-medium text-gray-700">
                     {% blocktranslate %}Enter your password:{% endblocktranslate %}
                 </label>
-                {% element field id=form.password.auto_id name="password" value=form.password.value errors=form.password.errors type="password" %}
-                {% endelement %}
+                {% render_field form.password class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" %}
+                {% if form.password.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ form.password.errors.0 }}</p>
+                {% endif %}
             </div>
 
             {{ redirect_field }}
