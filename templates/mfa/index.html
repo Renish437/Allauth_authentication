@@ -6,13 +6,13 @@
 {% endblock head_title %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto space-y-6 mt-5">
+<div class="max-w-6xl mx-auto space-y-6 mt-6">
 
-    <h1 class="text-3xl font-bold text-gray-800">{% trans "Two-Factor Authentication" %}</h1>
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">{% trans "Two-Factor Authentication" %}</h1>
 
     <!-- Authenticator App (TOTP) -->
     {% if "totp" in MFA_SUPPORTED_TYPES %}
-        <div class="bg-white shadow-md rounded-lg p-6 space-y-4">
+        <div class="bg-white shadow-md rounded-lg p-8 space-y-4">
             <h2 class="text-xl font-semibold">{% trans "Authenticator App" %}</h2>
             <p>
                 {% if authenticators.totp %}
@@ -29,6 +29,7 @@
                         {% trans "Deactivate" %}
                     </a>
                 {% else %}
+                
                     <a href="{{ activate_url }}" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">
                         {% trans "Activate" %}
                     </a>
@@ -39,7 +40,7 @@
 
     <!-- Security Keys (WebAuthn) -->
     {% if "webauthn" in MFA_SUPPORTED_TYPES %}
-        <div class="bg-white shadow-md rounded-lg p-6 space-y-4">
+        <div class="bg-white shadow-md rounded-lg p-8 space-y-4">
             <h2 class="text-xl font-semibold">{% trans "Security Keys" %}</h2>
             <p>
                 {% if authenticators.webauthn|length %}
@@ -71,7 +72,7 @@
     <!-- Recovery Codes -->
     {% if "recovery_codes" in MFA_SUPPORTED_TYPES %}
         {% with total_count=authenticators.recovery_codes.generate_codes|length unused_count=authenticators.recovery_codes.get_unused_codes|length %}
-            <div class="bg-white shadow-md rounded-lg p-6 space-y-4">
+            <div class="bg-white shadow-md rounded-lg p-8 space-y-4">
                 <h2 class="text-xl font-semibold">{% trans "Recovery Codes" %}</h2>
                 <p>
                     {% if authenticators.recovery_codes %}
