@@ -23,10 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-5&0dmd%xhavk#o3n9)*tr*ql@@a57#_)ozgfb6)*tj4l81vnty'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+AUTH_USER_MODEL = 'accounts.CustomProfiles'
 
 # Application definition
 
@@ -219,12 +220,13 @@ SERVER_EMAIL = "MYAUTHALL <no-reply@myauthall.com>"
 
 # Allauth specific subject prefix
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "[MYAUTHALL]"
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = EMAIL_HOST_USER or ""
 EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD or ""
+
 
 LOGGING = {
     'version': 1,
@@ -267,3 +269,6 @@ SOCIALACCOUNT_PROVIDERS = {
 #     'reauthenticate': 'mysite.forms.MyCustomReauthenticateForm',
 #     'authenticate_webauthn': 'mysite.forms.MyCustomAuthenticateWebAuthnForm',
 # }
+ACCOUNT_FORMS = {
+    'signup': 'accounts.forms.CustomSignupForm'
+    }

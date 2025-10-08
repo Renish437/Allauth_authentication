@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User
 from allauth.account.models import EmailAddress
 from allauth.socialaccount.models import SocialAccount
+from .models import CustomProfiles
 
 # Email verification check
 def is_verified(user):
@@ -20,11 +20,8 @@ def is_social(user):
 is_social.boolean = True
 is_social.short_description = "Third-Party Login"
 
-# Custom UserAdmin
-class CustomUserAdmin(UserAdmin):
-    list_display = UserAdmin.list_display + (is_verified, is_social)
-
-# Unregister default User admin
-admin.site.unregister(User)
-# Register custom User admin
-admin.site.register(User, CustomUserAdmin)
+@admin.register(CustomProfiles)
+class CustomProfilesAdmin(UserAdmin):
+    list_display = UserAdmin.list_display + ('phone', 'dob', is_verified, is_social)
+    fieldsets = UserAdmin.fieldsets + ((None, {'fields': ('phone', 'dob')}),)
+    add_fieldsets = UserAdmin.add_fieldsets + ((None, {'fields': ('phone', 'dob')}),)
