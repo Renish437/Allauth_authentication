@@ -4,7 +4,7 @@
     <div class="flex justify-between h-24 items-center">
       <!-- Logo -->
       <div class="flex-shrink-0 flex items-center">
-        <a href="{%url 'home' %}" class="text-2xl font-bold text-gray-800">AllAuth</a>
+        <a href="{% url 'home' %}" class="text-2xl font-bold text-gray-800">AllAuth</a>
       </div>
 
       <!-- Desktop Menu -->
@@ -56,6 +56,10 @@
                 <a href="{% url 'account_change_password' %}" 
                    class="block px-4 py-2 text-gray-700 hover:bg-violet-100 hover:text-violet-700 transition">
                    Change Password
+                </a>
+                <a href="{% url 'usersessions_list' %}" 
+                   class="block px-4 py-2 text-gray-700 hover:bg-violet-100 hover:text-violet-700 transition">
+                   Sessions
                 </a>
                 <a href="{% url 'mfa_index' %}" 
                    class="block px-4 py-2 text-gray-700 hover:bg-violet-100 hover:text-violet-700 transition">

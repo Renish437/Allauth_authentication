@@ -51,6 +51,10 @@ INSTALLED_APPS = [
      #pip install django-two-factor-auth qrcode
       "allauth.mfa", 
      'widget_tweaks',
+     
+     #sessions
+    'django.contrib.humanize',
+    'allauth.usersessions',
 ]
 SITE_ID=1
 MIDDLEWARE = [
@@ -64,6 +68,9 @@ MIDDLEWARE = [
     
       # Add the account middleware:
     "allauth.account.middleware.AccountMiddleware",
+    
+    # sessions 
+    'allauth.usersessions.middleware.UserSessionsMiddleware',
 ]
 
 

@@ -1,81 +1,98 @@
-{% extends "usersessions/base_manage.html" %}
+{% extends "base.html" %}
 {% load allauth %}
 {% load i18n %}
 {% load humanize %}
+
 {% block head_title %}
     {% trans "Sessions" %}
 {% endblock head_title %}
+
 {% block content %}
-    {% element h1 tags="usersessions,list" %}
-        {% trans "Sessions" %}
-    {% endelement %}
-    {% if session_count > 1 %}
-        {% url 'usersessions_list' as action_url %}
-    {% else %}
-        {% url 'account_logout' as action_url %}
-    {% endif %}
-    {% element form action=action_url method="post" tags="sessions" no_visible_fields=True %}
-        {% slot body %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 px-4 py-8">
+    <div class="max-w-5xl w-full bg-white rounded-2xl shadow-xl p-8">
+        <h1 class="text-3xl font-extrabold text-gray-800 text-center mb-6">
+            {% trans "Active Sessions Track" %}
+        </h1>
+
+        <p class="text-center text-gray-500 mb-8">
+            {% trans "Manage your current login sessions below." %}
+        </p>
+
+        {% if session_count > 1 %}
+            {% url 'usersessions_list' as action_url %}
+        {% else %}
+            {% url 'account_logout' as action_url %}
+        {% endif %}
+
+        <form method="post" action="{{ action_url }}" class="overflow-x-auto">
             {% csrf_token %}
-            {% element table tags="sessions" %}
-                {% element thead %}
-                    {% element tr %}
-                        {% element th %}
-                            {% translate "Started At" %}
-                        {% endelement %}
-                        {% element th %}
-                            {% translate "IP Address" %}
-                        {% endelement %}
-                        {% element th %}
-                            {% translate "Browser" %}
-                        {% endelement %}
+            <table class="w-full text-left border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+                <thead class="bg-gray-100 text-gray-700 uppercase text-sm">
+                    <tr>
+                        <th class="px-4 py-3">{% trans "Started At" %}</th>
+                        <th class="px-4 py-3">{% trans "IP Address" %}</th>
+                        <th class="px-4 py-3">{% trans "Browser" %}</th>
                         {% if show_last_seen_at %}
-                            {% element th %}
-                                {% translate "Last seen at" %}
-                            {% endelement %}
+                        <th class="px-4 py-3">{% trans "Last Seen At" %}</th>
                         {% endif %}
-                    {% endelement %}
-                {% endelement %}
-                {% element tbody %}
+                        <th class="px-4 py-3 text-center">{% trans "Status" %}</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-gray-200 text-gray-800">
                     {% for session in sessions %}
-                        {% element tr %}
-                            {% element td %}
-                                <span title="{{ session.created_at }}">{{ session.created_at|naturaltime }}</span>
-                            {% endelement %}
-                            {% element td %}
-                                {{ session.ip }}
-                            {% endelement %}
-                            {% element td %}
-                                {{ session.user_agent }}
-                            {% endelement %}
-                            {% if show_last_seen_at %}
-                                {% element td %}
-                                    <span title="{{ session.last_seen_at }}">{{ session.last_seen_at|naturaltime }}</span>
-                                {% endelement %}
+                    <tr class="hover:bg-purple-50 transition">
+                        <td class="px-4 py-3" title="{{ session.created_at }}">
+                            {{ session.created_at|naturaltime }}
+                        </td>
+                        <td class="px-4 py-3">
+                            {{ session.ip }}
+                        </td>
+                        <td class="px-4 py-3 truncate max-w-[200px]">
+                            {{ session.user_agent }}
+                        </td>
+                        {% if show_last_seen_at %}
+                        <td class="px-4 py-3" title="{{ session.last_seen_at }}">
+                            {{ session.last_seen_at|naturaltime }}
+                        </td>
+                        {% endif %}
+                        <td class="px-4 py-3 text-center">
+                            {% if session.is_current %}
+                                <span class="inline-block px-3 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded-full">
+                                    {% trans "Current" %}
+                                </span>
+                            {% else %}
+                                <span class="inline-block px-3 py-1 text-xs font-semibold bg-gray-100 text-gray-700 rounded-full">
+                                    {% trans "Active" %}
+                                </span>
                             {% endif %}
-                            {% element td %}
-                                {% if session.is_current %}
-                                    {% element badge tags="session,current" %}
-                                        {% translate "Current" %}
-                                    {% endelement %}
-                                {% else %}
-                                {% endif %}
-                            {% endelement %}
-                        {% endelement %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-6 text-gray-500">
+                            {% trans "No active sessions found." %}
+                        </td>
+                    </tr>
                     {% endfor %}
-                {% endelement %}
-            {% endelement %}
-        {% endslot %}
-        {% slot actions %}
-            {% if session_count > 1 %}
-                {% element button type="submit" %}
-                    {% translate "Sign Out Other Sessions" %}
-                {% endelement %}
-            {% else %}
-                {% element button type="submit" %}
-                    {% translate "Sign Out" %}
-                {% endelement %}
-            {% endif %}
-        {% endslot %}
-    {% endelement %}
+                </tbody>
+            </table>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-center mt-8">
+                {% if session_count > 1 %}
+                <button type="submit"
+                    class="w-full md:w-auto px-6 py-3 bg-purple-600 text-white font-semibold rounded-xl hover:bg-purple-700 transition">
+                    {% trans "Sign Out Other Sessions" %}
+                </button>
+                {% else %}
+                <button type="submit"
+                    class="w-full md:w-auto px-6 py-3 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition">
+                    {% trans "Sign Out" %}
+                </button>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock content %}
