@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from allauth.account.forms import SignupForm
 from datetime import date
 import datetime
+from .models import CustomProfiles
 
 
 YEARS = range(1900, date.today().year + 1)
@@ -44,7 +45,28 @@ class CustomSignupForm(SignupForm):
         user.save()
         return user
     
+# forms.py
 class ProfileForm(forms.ModelForm):
+    day = forms.ChoiceField(choices=DAYS, required=False, widget=forms.Select(attrs={'hidden': True}))
+    month = forms.ChoiceField(choices=MONTHS, required=False, widget=forms.Select(attrs={'hidden': True}))
+    year = forms.ChoiceField(choices=[(str(y), str(y)) for y in reversed(YEARS)], required=False, widget=forms.Select(attrs={'hidden': True}))
+
     class Meta:
-        model = User
-        fields = ['username', 'email']
+        model = CustomProfiles
+        fields = ['username', 'email', 'phone', 'dob', 'day', 'month', 'year']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.dob:
+            self.fields['day'].initial = self.instance.dob.day
+            self.fields['month'].initial = f"{self.instance.dob.month:02d}"
+            self.fields['year'].initial = str(self.instance.dob.year)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        day = cleaned_data.get('day')
+        month = cleaned_data.get('month')
+        year = cleaned_data.get('year')
+        if day and month and year:
+            cleaned_data['dob'] = f"{year}-{month}-{day}"  # YYYY-MM-DD
+        return cleaned_data

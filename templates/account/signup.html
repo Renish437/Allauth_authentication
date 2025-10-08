@@ -20,7 +20,7 @@
                 {% csrf_token %}
                 {{ redirect_field }}
 <div x-data="dobPicker({
-    initialDay: '{{ form.day.value|default_if_none:'' }}',
+     initialDay: '{{ form.day.value|default_if_none:'' }}',
     initialMonth: '{{ form.month.value|default_if_none:'' }}',
     initialYear: '{{ form.year.value|default_if_none:'' }}'
 })" class="grid grid-cols-3 gap-4">
