@@ -21,7 +21,7 @@ is_social.boolean = True
 is_social.short_description = "Third-Party Login"
 
 @admin.register(CustomProfiles)
-class CustomProfilesAdmin(UserAdmin):
+class AdminCustomProfiles(UserAdmin):
     list_display = UserAdmin.list_display + ('phone', 'dob', is_verified, is_social)
     fieldsets = UserAdmin.fieldsets + ((None, {'fields': ('phone', 'dob')}),)
     add_fieldsets = UserAdmin.add_fieldsets + ((None, {'fields': ('phone', 'dob')}),)

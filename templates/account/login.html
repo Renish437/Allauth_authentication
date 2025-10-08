@@ -24,9 +24,9 @@
     <div>
         <label for="{{ form.login.id_for_label }}" class="block mb-2 font-medium text-gray-700">
             
-            Username
+          Username or Email
         </label>
-        {% render_field form.login class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" %}
+        {% render_field form.login class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" placeholder="Username or Email" %}
         {% if form.login.errors %}
             <p class="mt-1 text-sm text-red-600">{{ form.login.errors|striptags }}</p>
         {% endif %}

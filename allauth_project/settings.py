@@ -96,7 +96,8 @@ TEMPLATES = [
 AUTHENTICATION_BACKENDS = [
  
     # Needed to login by username in Django admin, regardless of `allauth`
-   # 'django.contrib.auth.backends.ModelBackend',
+   'django.contrib.auth.backends.ModelBackend',
+   'accounts.backends.EmailOrUserNameModelBackend',
 
     # `allauth` specific authentication methods, such as login by email
    'allauth.account.auth_backends.AuthenticationBackend',
@@ -220,7 +221,7 @@ SERVER_EMAIL = "MYAUTHALL <no-reply@myauthall.com>"
 
 # Allauth specific subject prefix
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "[MYAUTHALL]"
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
