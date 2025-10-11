@@ -29,7 +29,7 @@
                 <label for="{{ form.login.id_for_label }}" class="block mb-2 font-medium text-gray-700">
                     {% trans "Email" %}
                 </label>
-                {% render_field form.email class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" placeholder="Enter email " %}
+                {% render_field form.email class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" placeholder="Enter email " %}
                 {% if form.login.errors %}
                     <p class="mt-1 text-sm text-red-600">{{ form.login.errors|striptags }}</p>
                 {% endif %}

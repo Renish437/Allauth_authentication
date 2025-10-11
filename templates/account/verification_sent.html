@@ -32,7 +32,7 @@
 <form method="post" action="{% url 'account_resend_email' %}" class="mt-4">
     {% csrf_token %}
     <input type="email" name="email" placeholder="Enter your email" required
-           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition mb-3">
+           class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition mb-3">
     <button type="submit" class="w-full py-3 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700 transition">
         {% trans "Resend Verification Email" %}
     </button>

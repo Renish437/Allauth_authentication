@@ -1,0 +1,127 @@
+{% extends "base_email.html" %}
+{% load i18n %}
+{% load account %}
+
+{% block content %}
+<table
+  cellspacing="0"
+  cellpadding="0"
+  bgcolor="#D4D9FA"
+  align="center"
+  class="es-content-body"
+  style="
+    mso-table-lspace: 0pt;
+    mso-table-rspace: 0pt;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    background-color: #d4d9fa;
+    width: 600px;
+  "
+  role="none"
+>
+  <tr>
+    <td
+      align="left"
+      style="
+        margin: 0;
+        padding-right: 20px;
+        padding-left: 20px;
+        padding-top: 30px;
+        padding-bottom: 20px;
+      "
+    >
+      <table
+        width="100%"
+        cellspacing="0"
+        cellpadding="0"
+        role="presentation"
+        style="
+          mso-table-lspace: 0pt;
+          mso-table-rspace: 0pt;
+          border-collapse: collapse;
+          border-spacing: 0px;
+        "
+      >
+        <tr>
+          <td
+            align="left"
+            style="padding: 0; margin: 0"
+          >
+            <h1
+              style="
+                margin: 0;
+                font-family: Jost, Arial, sans-serif;
+                font-size: 30px;
+                font-weight: normal;
+                line-height: 36px;
+                color: #020202;
+              "
+            >
+              {% trans "Confirm Your Email Address" %}
+            </h1>
+          </td>
+        </tr>
+        <tr>
+          <td
+            align="left"
+            style="
+              padding: 0;
+              margin: 0;
+              padding-top: 25px;
+              padding-bottom: 40px;
+            "
+          >
+            <p
+              style="
+                margin: 0;
+                font-family: Jost, Arial, sans-serif;
+                line-height: 21px;
+                color: #020202;
+                font-size: 14px;
+              "
+            >
+              {% blocktrans with email=confirmation.email_address.email user=user_display %}
+              Dear {{ user_display }},<br /><br />
+              Please confirm that <a href="mailto:{{ email }}" style="color: #783BDA; text-decoration: underline;">{{ email }}</a> is your email address by clicking the button below.
+              {% endblocktrans %}
+            </p>
+            <span
+              class="es-button-border"
+              style="
+                margin-top: 15px;
+                border-style: solid;
+                border-color: #9151df;
+                background: #ffffff;
+                border-width: 1px;
+                display: inline-block;
+                border-radius: 3px;
+                width: auto;
+              "
+            >
+              <a
+                href="{{ activate_url }}"
+                class="es-button"
+                style="
+                  text-decoration: none !important;
+                  color: #fefdfd;
+                  font-size: 18px;
+                  padding: 10px 20px;
+                  display: inline-block;
+                  background: #783BDA;
+                  border-radius: 3px;
+                  font-family: verdana, geneva, sans-serif;
+                  font-weight: normal;
+                  line-height: 21.6px;
+                  text-align: center;
+                "
+              >
+                {% trans "Confirm Email" %}
+              </a>
+            </span>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+{% endblock content %}

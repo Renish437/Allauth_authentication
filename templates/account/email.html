@@ -69,7 +69,7 @@
             {% url 'account_email' as action_url %}
             <form method="post" action="{{ action_url }}" class="space-y-4 mt-2">
                 {% csrf_token %}
-                {% render_field form.email class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" %}
+                {% render_field form.email class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" %}
                 <button type="submit" name="action_add" class="w-full py-3 bg-purple-600 text-white rounded-xl font-bold text-lg hover:bg-purple-700 transition">
                     {% trans "Add Email" %}
                 </button>

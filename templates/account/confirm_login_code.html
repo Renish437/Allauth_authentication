@@ -1,52 +1,49 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load allauth account %}
 {% load widget_tweaks %}
 
 {% block head_title %}
-    {% translate "Sign In" %}
+    {% trans "Enter Login Code" %}
 {% endblock head_title %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+<div class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 space-y-6">
         <!-- Title -->
-        <h1 class="text-2xl font-extrabold text-gray-800 text-center mb-4">
-            {% translate "Enter Confirmation Code" %}
+        <h1 class="text-2xl font-extrabold text-gray-800 text-center">
+            {% trans "Enter Your Login Code" %}
         </h1>
 
-        <!-- Recipient info -->
-        <p class="text-center text-gray-600 mb-6">
-            {% translate "We've sent a code to your email/phone. Enter it below to continue." %}
+        <!-- Instructions -->
+        <p class="text-gray-600 text-center">
+            {% blocktrans %}Please enter the code sent to your email to complete your login.{% endblocktrans %}
         </p>
 
-        <!-- Confirmation form -->
-        <form method="post" action="{{ action_url }}" class="mt-4 space-y-3">
+        <!-- Login Code Form -->
+        {% url 'account_login_by_code' as login_code_url %}
+        <form method="post" action="{{ login_code_url }}" class="space-y-4">
             {% csrf_token %}
-            {% render_field form.code class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" placeholder=form.code.label %}
+            <div>
+                <label for="{{ form.code.id_for_label }}" class="block mb-2 font-medium text-gray-700">
+                    {% trans "Login Code" %}
+                </label>
+                {% render_field form.code class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition" placeholder="Enter code" %}
+                {% if form.code.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.code.errors|striptags }}</p>
+                {% endif %}
+            </div>
 
-            <button type="submit" class="w-full py-3 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700 transition">
-                {% translate "Confirm" %}
+            <button type="submit" class="w-full py-3 bg-purple-600 text-white rounded-xl font-bold text-lg hover:bg-purple-700 transition">
+                {% trans "Submit Code" %}
             </button>
         </form>
 
-        <!-- Cancel button -->
-        <div class="mt-3">
-            <a href="{% url 'account_login' %}" class="block w-full py-3 text-center border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-100 transition font-semibold">
-                {% translate "Cancel" %}
+        <div class="text-center mt-4">
+            {% url 'account_request_login_code' as request_code_url %}
+            <a href="{{ request_code_url }}" class="text-purple-600 hover:underline">
+                {% trans "Request a new code" %}
             </a>
         </div>
-
-        <!-- Resend code -->
-        {% if can_resend %}
-            <form method="post" action="{{ action_url }}" class="mt-4 text-center">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="resend">
-                <button type="submit" class="text-purple-600 font-semibold hover:underline">
-                    {% translate "Request new code" %}
-                </button>
-            </form>
-        {% endif %}
     </div>
 </div>
 {% endblock content %}

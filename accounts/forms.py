@@ -25,15 +25,15 @@ class CustomSignupForm(SignupForm):
     last_name = forms.CharField(max_length=30, label="Last Name")
     phone = forms.CharField(max_length=30, label="Phone Number")
 
-    day = forms.ChoiceField(choices=DAYS, required=True, widget=forms.Select(attrs={
+    day = forms.ChoiceField(choices=DAYS, widget=forms.Select(attrs={
         'x-ref': 'daySelect',
         'class': 'hidden'
     }))
-    month = forms.ChoiceField(choices=MONTHS, required=True, widget=forms.Select(attrs={
+    month = forms.ChoiceField(choices=MONTHS, widget=forms.Select(attrs={
         'x-ref': 'monthSelect',
         'class': 'hidden'
     }))
-    year = forms.ChoiceField(choices=[(str(y), str(y)) for y in reversed(YEARS)], required=True, widget=forms.Select(attrs={
+    year = forms.ChoiceField(choices=[(str(y), str(y)) for y in reversed(YEARS)], widget=forms.Select(attrs={
         'x-ref': 'yearSelect',
         'class': 'hidden'
     }))

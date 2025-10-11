@@ -1,0 +1,66 @@
+{% extends "account/email/base_email.html" %}
+{% load i18n %}
+{% load account %}
+
+{% block head_title %}{% trans "Confirm Your Email Address" %}{% endblock %}
+
+{% block content %}
+<table cellspacing="0" cellpadding="0" bgcolor="#D4D9FA" align="center" width="600" style="margin:auto; border-collapse:collapse; background-color:#D4D9FA; background-image:url('https://fvanesf.stripocdn.email/content/guids/CABINET_e18e8b6ad0d2f530731f1cc3bd27d47df9d75aa833914e627ec524bf07cda11b/images/14731345_rm222mind20_1_5nq.png'); background-position:right bottom; background-repeat:no-repeat; font-family:Jost, Arial, sans-serif;">
+  <tr>
+    <td style="padding:30px 20px 20px 20px;">
+      <h1 style="margin:0; font-size:30px; line-height:36px; color:#020202;">{% trans "Confirm Your Email Address" %}</h1>
+    </td>
+  </tr>
+
+  <tr>
+    <td style="background:#ffffff; border-radius:8px; padding:30px;">
+      <p style="margin:0; line-height:21px; color:#020202; font-size:14px;">
+        {% user_display user as user_display %}
+        {% blocktrans with user_display=user_display site_name=current_site.name site_domain=current_site.domain %}
+        Dear {{ user_display }},<br><br>
+        You're receiving this email because you registered an account on <a href="{{ site_url }}" style="color:#783BDA; text-decoration:underline;">{{ site_domain }}</a>. Please confirm your email address by clicking the button below or entering the code.
+        {% endblocktrans %}
+      </p>
+
+      {% if code %}
+      <p style="margin:15px 0 0 0; line-height:24px; font-size:16px; color:#020202;">
+        {% blocktrans %}Your verification code is:{% endblocktrans %}<br><br>
+        <strong style="font-size:36px; color:#783BDA; letter-spacing:4px; font-family:monospace;">{{ code }}</strong>
+      </p>
+      {% endif %}
+
+      {% if activate_url %}
+      <p style="margin:20px 0 0 0;">
+        <a href="{{ activate_url }}" style="display:inline-block; background:#783BDA; color:#fff; text-decoration:none; padding:12px 30px; border-radius:3px; font-size:18px; font-family:Jost, Arial, sans-serif;">
+          {% trans "Confirm Email Address" %}
+        </a>
+      </p>
+      {% else %}
+      <p style="color:#ff0000; margin-top:15px;">Error: Confirmation URL not available. Please enter the code manually.</p>
+      {% endif %}
+
+      <p style="margin:20px 0 0 0; font-size:14px; line-height:21px; color:#666;">
+        {% blocktrans with timeout=timeout %}
+        This code or link expires in {{ timeout }} seconds.
+        {% endblocktrans %}<br>
+        {% trans "If you didn't request this, please ignore this email." %}
+      </p>
+    </td>
+  </tr>
+</table>
+
+<!-- Plain text fallback -->
+<div style="display:none;">
+{% user_display user as user_display %}
+{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}
+Dear {{ user_display }},
+You're receiving this email because you registered an account on {{ site_domain }}.
+{% endblocktrans %}
+{% if code %}
+{% blocktrans %}Your email verification code is: {{ code }}{% endblocktrans %}
+{% endif %}
+{% if activate_url %}
+{% blocktrans %}To confirm, go to {{ activate_url }}{% endblocktrans %}
+{% endif %}
+</div>
+{% endblock %}
